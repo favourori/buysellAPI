@@ -45,17 +45,16 @@ router.post("/register", async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
     if (user) {
-      // res
-      //   .status(400)
-      //   .send({ success: false, message: "A user with this email exists" });
-      res.render("error");
+      res
+        .status(400)
+        .send({ success: false, message: "A user with this email exists" });
     } else {
       //Hash password
       let salt = await bcrypt.genSalt(10);
       let hashedPassword = await bcrypt.hash(req.body.password, salt);
       //console.log("not found");
       let newUser = await new User({
-        fullName: req.body.firstName,
+        fullName: req.body.fullName,
         email: req.body.email,
         password: hashedPassword,
       });
