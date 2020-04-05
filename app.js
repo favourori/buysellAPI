@@ -18,12 +18,36 @@ app.use(function (req, res, next) {
   next();
 });
 
+//Body Middlewares here
+let bodyParser = require("body-parser");
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+//connect to db here
+mongoose
+  .connect(process.env.DBURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("connected to DB");
+  })
+  .catch((e) => {
+    console.log(e.message);
+  });
+
 app.get("/", (req, res) => {
   res.status(200).send({
     success: true,
     message: "BuySell API",
   });
 });
+
+//import routes
+
+let userRoute = require("./routes/user");
+
+app.use("/buysellapi/v1/user", userRoute);
 
 let PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
