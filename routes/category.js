@@ -28,6 +28,25 @@ router.post('/delete', async (req, res) => {
     }
 });
 
+
+router.get('/all', async (req, res) => {
+    try {
+        const categories = await Category.find();
+        return res.status(200)
+            .json({
+                success: true,
+                data: categories,
+                message: 'Categories retrieved successful'
+            });
+    } catch (err) {
+        return res.status(400)
+            .json({
+                success: false,
+                message: 'Could no retrieve categories'
+            });
+    }
+});
+
 router.post('/upload', (() => {
     const multer = require('multer');
     const upload = multer({dest: 'public/categories/images'});
