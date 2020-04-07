@@ -36,13 +36,14 @@ router.post(
                         photos.push(
                             ((req.hostname !== "localhost" && req.host) || "") +
                                 "/" +
-                                file.path.replace("/public", "")
+                                file.path.replace("public/", "")
                         );
                     }
                     const category = await Category.findOne({
-                        _id: req.body.categoryId,
+                        _id: req.body.category,
                     });
 
+                    console.log(category);
                     if (category === null) {
                         photos.forEach((photo) => {
                             const fullPhotoPath = path.join(
@@ -57,12 +58,10 @@ router.post(
                             });
                         });
 
-                        return res
-                            .status(400)
-                            .json({
-                                success: false,
-                                message: "Category does not exist",
-                            });
+                        return res.status(400).json({
+                            success: false,
+                            message: "Category does not exist",
+                        });
                     }
 
                     const product = await Product.create({
@@ -131,6 +130,24 @@ router.get("/all", async (req, res) => {
             data: products,
             message: "All products fetched",
         });
+    } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.toString(),
+        });
+    }
+});
+
+router.post("/delete", async (req, res) => {
+    try {
+        const product = await Product.findOneAndDelete({ _id: req.body.id });
+        const imagePath = path.join(__dirname, "/../public/");
+        fs.unlink(imagePath, (err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
+        await product.remove();
     } catch (err) {
         return res.status(400).json({
             success: false,
