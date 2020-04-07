@@ -146,7 +146,7 @@ router.post("/delete", async (req, res) => {
 
         const imagePath = path.join(__dirname, "/../public/");
         product.photos.forEach((photo) => {
-            fs.unlink(imagePath + photo, (err) => {
+            fs.unlink(imagePath + photo.replace(req.hostname, ''), (err) => {
                 if (err) {
                     console.log(err);
                 }
