@@ -33,7 +33,7 @@ router.post(
                         image:
                             ((req.hostname !== "localhost" && req.host) || "") +
                             "/" +
-                            req.file.path,
+                            req.file.path.replace('/public', ''),
                     });
                     return res.status(200).json({
                         success: true,
