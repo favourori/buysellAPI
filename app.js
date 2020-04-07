@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 //cors
 let cors = require("cors");
 
+
+app.use(express.static(__dirname + "/public"));
+
 //allowing cors
 
 app.use(function (req, res, next) {
