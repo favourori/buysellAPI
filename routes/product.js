@@ -140,15 +140,26 @@ router.get("/all", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
     try {
-        const product = await Product.findOneAndDelete({ _id: req.body.id });
+        console.log(await Product.find());
+        const product = await Product.findOne({ _id: req.body.id });
+        console.log(product, req.body);
+
         const imagePath = path.join(__dirname, "/../public/");
-        fs.unlink(imagePath, (err) => {
-            if (err) {
-                console.log(err);
-            }
+        product.photos.forEach((photo) => {
+            fs.unlink(imagePath + photo, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
         });
+
         await product.remove();
+        return res.status(200).json({
+            success: true,
+            message: "Product deleted successfully",
+        });
     } catch (err) {
+        console.log(err);
         return res.status(400).json({
             success: false,
             message: err.toString(),
