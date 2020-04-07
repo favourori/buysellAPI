@@ -28,9 +28,8 @@ router.post(
             upload.single("image"),
             async (req, res) => {
                 try {
-                    const image = ((req.hostname !== "localhost" && req.host) || "") +
-                        "/" +
-                        req.file.path.replace('/public', '')
+                    let image = req.file.path
+                    image = image.replace('/public')
                     const category = await Category.create({
                         ...req.body,
                         image,
@@ -56,7 +55,7 @@ router.post("/delete", async (req, res) => {
         const category = await Category.findOne({ _id: req.body.id });
         const imagePath = path.join(
             __dirname,
-            "/../",
+            "/../public/",
             `${category.image.replace(req.hostname, "")}`
         );
         fs.unlink(imagePath, (err) => {
