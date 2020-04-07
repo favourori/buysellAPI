@@ -22,6 +22,7 @@ app.use(function (req, res, next) {
 let bodyParser = require("body-parser");
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 
 //connect to db here
 mongoose
@@ -49,7 +50,7 @@ let userRoute = require("./routes/user");
 const categoryRoute = require("./routes/category")
 
 app.use("/buysellapi/v1/user", userRoute)
-app.use('/buysellapi/v1/user');
+app.use('/buysellapi/v1/category', categoryRoute);
 
 
 
