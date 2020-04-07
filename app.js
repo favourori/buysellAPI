@@ -54,7 +54,7 @@ const productRoute = require("./routes/product");
 
 app.use("/buysellapi/v1/user", userRoute);
 app.use("/buysellapi/v1/category", categoryRoute);
-app.use("/buysellapi/v1/category", productRoute);
+app.use("/buysellapi/v1/product", productRoute);
 
 let PORT = process.env.PORT || 3000;
 console.log(PORT);
