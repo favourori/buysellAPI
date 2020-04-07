@@ -29,7 +29,7 @@ router.post(
             async (req, res) => {
                 try {
                     let image = req.file.path
-                    image = image.replace('/public')
+                    image = image.replace('public', '')
                     const category = await Category.create({
                         ...req.body,
                         image,
