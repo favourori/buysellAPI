@@ -1,5 +1,8 @@
 const router = require("express").Router();
+const Category = require("../model/category");
 const Product = require("../model/product");
+const fs = require("fs");
+const path = require("path");
 
 router.post(
     "/create",
@@ -15,7 +18,9 @@ router.post(
                     const fileNameArray = file.originalname.split(".");
                     console.log(file);
                     const filename =
-                        Date.now() + "." + fileNameArray[fileNameArray.length - 1];
+                        Date.now() +
+                        "." +
+                        fileNameArray[fileNameArray.length - 1];
                     cb(null, filename);
                 },
             }),
@@ -30,12 +35,40 @@ router.post(
                     for (const file of req.files) {
                         photos.push(
                             ((req.hostname !== "localhost" && req.host) || "") +
-                            "/" +
-                            file.path.replace("/public", "")
+                                "/" +
+                                file.path.replace("/public", "")
                         );
                     }
+                    const category = await Category.findOne({
+                        _id: req.body.categoryId,
+                    });
 
-                    const product = await Product.create({ ...req.body, photos });
+                    if (category === null) {
+                        photos.forEach((photo) => {
+                            const fullPhotoPath = path.join(
+                                __dirname,
+                                "/../public/",
+                                `${photo}`
+                            );
+                            fs.unlink(fullPhotoPath, (err) => {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                        });
+
+                        return res
+                            .status(400)
+                            .json({
+                                success: false,
+                                message: "Category does not exist",
+                            });
+                    }
+
+                    const product = await Product.create({
+                        ...req.body,
+                        photos,
+                    });
                     return res.status(200).json({
                         success: true,
                         data: product,

@@ -2,6 +2,8 @@ node_modules/
 
 .idea
 
+products/images/*
+
 yarn.lock
 
 package-lock.json
