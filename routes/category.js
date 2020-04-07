@@ -28,12 +28,12 @@ router.post(
             upload.single("image"),
             async (req, res) => {
                 try {
+                    const image = ((req.hostname !== "localhost" && req.host) || "") +
+                        "/" +
+                        req.file.path.replace('/public', '')
                     const category = await Category.create({
                         ...req.body,
-                        image:
-                            ((req.hostname !== "localhost" && req.host) || "") +
-                            "/" +
-                            req.file.path.replace('/public', ''),
+                        image,
                     });
                     return res.status(200).json({
                         success: true,
