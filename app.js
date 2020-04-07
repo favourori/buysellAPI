@@ -46,8 +46,10 @@ app.get("/", (req, res) => {
 //import routes
 
 let userRoute = require("./routes/user");
+const categoryRoute = require("./routes/category")
 
-app.use("/buysellapi/v1/user", userRoute);
+app.use("/buysellapi/v1/user", userRoute)
+app.use('/buysellapi/v1/user');
 
 
 
