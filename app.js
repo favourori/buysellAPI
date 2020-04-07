@@ -58,6 +58,7 @@ app.use('/buysellapi/v1/category', categoryRoute);
 
 
 let PORT = process.env.PORT || 3000;
+console.log(PORT)
 app.listen(PORT, () => {
   console.log(`App is running on port ${PORT}`);
 });

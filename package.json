@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app"
+    "start-dev": "node app",
+    "start": "env PORT=80 node app"
   },
   "keywords": [],
   "author": "",
