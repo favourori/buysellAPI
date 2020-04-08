@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: [true, "location is required"],
         },
+        featured: {
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: true,
