@@ -33,11 +33,7 @@ router.post(
                     const photos = [];
 
                     for (const file of req.files) {
-                        photos.push(
-                            ((req.hostname !== "localhost" && req.host) || "") +
-                                "/" +
-                                file.path.replace("public/", "")
-                        );
+                        photos.push(file.path.replace("public", ""));
                     }
                     const category = await Category.findOne({
                         _id: req.body.category,
@@ -146,11 +142,14 @@ router.post("/delete", async (req, res) => {
 
         const imagePath = path.join(__dirname, "/../public/");
         product.photos.forEach((photo) => {
-            fs.unlink(imagePath + photo.replace(req.hostname, ''), (err) => {
-                if (err) {
-                    console.log(err);
+            fs.unlink(
+                path.join(imagePath, photo.replace(req.hostname, "")),
+                (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
                 }
-            });
+            );
         });
 
         await product.remove();
