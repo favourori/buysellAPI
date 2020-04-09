@@ -6,15 +6,20 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: [true, "name is required"],
         },
+        user: {
+            type: String,
+            required: [true, "user is required"],
+            ref: "user",
+        },
         desc: {
             type: String,
             required: [true, "desc is required"],
         },
         category: {
             type: String,
-            required: [true, 'Category is required'],
-            ref: 'category'
-        }  ,
+            required: [true, "Category is required"],
+            ref: "category",
+        },
         price: {
             type: Number,
             required: [true, "price is required"],
@@ -35,8 +40,8 @@ const productSchema = new mongoose.Schema(
         },
         featured: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     {
         timestamps: true,
