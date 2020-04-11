@@ -89,6 +89,13 @@ router.post("/update", async (req, res) => {
             { new: true }
         );
 
+        if (product === null) {
+            return res.status(400).json({
+                success: false,
+                message: "Product does not exist"
+            })
+        }
+
         return res.status(200).json({
             success: true,
             data: product,
