@@ -64,6 +64,9 @@ router.post(
                         ...req.body,
                         photos,
                     });
+
+                    await product.populate("user").execPopulate();
+
                     return res.status(200).json({
                         success: true,
                         data: product,
@@ -87,13 +90,15 @@ router.post("/update", async (req, res) => {
             { _id: req.body.id },
             { ...rest },
             { new: true }
-        );
+        )
+            .populate("user")
+            .exec();
 
         if (product === null) {
             return res.status(400).json({
                 success: false,
-                message: "Product does not exist"
-            })
+                message: "Product does not exist",
+            });
         }
 
         return res.status(200).json({
