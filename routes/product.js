@@ -134,10 +134,19 @@ router.post("/get", async (req, res) => {
 
 router.get("/all", async (req, res) => {
     try {
-        const products = await Product.find().populate("user");
+        const perPage = Number(req.query.perPage) || 50;
+        const page = (Number(req.query.page) || 1) - 1;
+
+        const products = await Product
+            .find()
+            .skip(page * perPage)
+            .limit(perPage)
+            .populate("user")
+            .exec();
+        
         return res.status(200).json({
             success: true,
-            data: products,
+            data: { products, page: page + 1, perPage },
             message: "All products fetched",
         });
     } catch (err) {
