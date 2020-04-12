@@ -116,7 +116,7 @@ router.post("/update", async (req, res) => {
 
 router.post("/get", async (req, res) => {
     try {
-        const product = await Product.find({ _id: req.body.id }).populate(
+        const product = await Product.findOne({ _id: req.body.id }).populate(
             "user"
         );
         return res.status(200).json({
