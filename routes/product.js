@@ -3,6 +3,7 @@ const Category = require("../model/category");
 const Product = require("../model/product");
 const fs = require("fs");
 const path = require("path");
+const User = require("../model/user");
 
 router.post(
     "/create",
@@ -127,7 +128,29 @@ router.get("/all", async (req, res) => {
             success: true,
             data: products,
             message: "All products fetched",
+            count: products.length,
         });
+    } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.toString(),
+        });
+    }
+});
+
+//return all listings by a user
+router.get("/myListings/:id", async (req, res) => {
+    let userID = req.params.id;
+
+    try {
+        const products = await Product.find({ user: userID });
+        return res.status(200).json({
+            success: true,
+            data: products,
+            message: "All products fetched",
+            count: products.length,
+        });
+        //Catch errors
     } catch (err) {
         return res.status(400).json({
             success: false,
