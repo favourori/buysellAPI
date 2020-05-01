@@ -65,6 +65,9 @@ router.post(
                         ...req.body,
                         photos,
                     });
+
+                    await product.populate("user").execPopulate();
+
                     return res.status(200).json({
                         success: true,
                         data: product,
@@ -88,7 +91,16 @@ router.post("/update", async (req, res) => {
             { _id: req.body.id },
             { ...rest },
             { new: true }
-        );
+        )
+            .populate("user")
+            .exec();
+
+        if (product === null) {
+            return res.status(400).json({
+                success: false,
+                message: "Product does not exist",
+            });
+        }
 
         return res.status(200).json({
             success: true,
@@ -105,7 +117,7 @@ router.post("/update", async (req, res) => {
 
 router.post("/get", async (req, res) => {
     try {
-        const product = await Product.find({ _id: req.body.id }).populate(
+        const product = await Product.findOne({ _id: req.body.id }).populate(
             "user"
         );
         return res.status(200).json({
@@ -121,12 +133,44 @@ router.post("/get", async (req, res) => {
     }
 });
 
-router.get("/all", async (req, res) => {
+router.get("/all/free", async (req, res) => {
     try {
-        const products = await Product.find();
+        const perPage = Number(req.query.perPage) || 50;
+        const page = (Number(req.query.page) || 1) - 1;
+
+        const products = await Product.find({ price: 0 })
+            .skip(page * perPage)
+            .limit(perPage)
+            .populate("user")
+            .exec();
+
         return res.status(200).json({
             success: true,
-            data: products,
+            data: { products, page: page + 1, perPage },
+            message: "All products fetched",
+        });
+    } catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.toString(),
+        });
+    }
+});
+
+router.get("/all", async (req, res) => {
+    try {
+        const perPage = Number(req.query.perPage) || 50;
+        const page = (Number(req.query.page) || 1) - 1;
+
+        const products = await Product.find()
+            .skip(page * perPage)
+            .limit(perPage)
+            .populate("user")
+            .exec();
+
+        return res.status(200).json({
+            success: true,
+            data: { products, page: page + 1, perPage },
             message: "All products fetched",
             count: products.length,
         });

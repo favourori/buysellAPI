@@ -15,6 +15,11 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: [true, "desc is required"],
         },
+        status: {
+            type: String,
+            enum: ["Available", "Sold", "Expired"],
+            default: "Available",
+        },
         category: {
             type: String,
             required: [true, "Category is required"],
